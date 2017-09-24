@@ -8,18 +8,20 @@ import trend as trend
 
 
 # Where the csv file will live
-LSTM_FILE_NAME = 'data/ltp_trends.csv'
+#LSTM_FILE_NAME = 'data/ltp_trends.csv'
 FILE_NAME = 'data/historical.csv'
-QUOTE = 'NASDAQ:MSFT'
+QUOTE = 'NSE:RELIANCE'
 DF_EPOCH_SIZE = 10
 LSTM_EPOCH_SIZE= 10
 
 #get Historical data save as csv
 ts.get_historical_India_for_df(QUOTE, FILE_NAME)
-ts.get_historical_India(QUOTE, LSTM_FILE_NAME)
+#ts.get_historical_India(QUOTE, LSTM_FILE_NAME)
 
 # analyse trend
-trend.getTrends(LSTM_FILE_NAME,LSTM_EPOCH_SIZE)
+trend.getTrends(FILE_NAME,LSTM_EPOCH_SIZE)
+
+#
 print(df.stock_prediction(FILE_NAME,DF_EPOCH_SIZE))
 
 
@@ -27,7 +29,7 @@ print(df.stock_prediction(FILE_NAME,DF_EPOCH_SIZE))
 # analyse historical data
 
 client = st.TwitterClient()
-result = client.predict_stock_sentiment(quote='NSE:TCS', count=500)
+result = client.predict_stock_sentiment(quote=QUOTE, count=500)
 print(result)
 raw_data = {'sources': ['Twitter Feed', 'Market News'],
                 'Positive': [result['tweet_sentiment']['positive_per'], result['news_sentiment']['positive_per']],

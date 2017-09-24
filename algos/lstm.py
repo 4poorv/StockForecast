@@ -7,17 +7,23 @@ from keras.layers.core import Dense, Activation, Dropout
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #Hide messy TensorFlow warnings
-warnings.filterwarnings("ignore") #Hide messy Numpy warnings
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' #Hide TensorFlow warnings
+warnings.filterwarnings("ignore") #Hide Numpy warnings
 
-def load_data(filename, seq_len, normalise_window):
-    f = open(filename, 'rb').read()
-    data = f.decode().split('\n')
+def load_data(file_path, seq_len, normalise_window):
+    dataset = []
+
+    with open(file_path) as f:
+        for n, line in enumerate(f):
+            if n != 0:
+                dataset.append(float(line.split(',')[4]))
+
+    dataset = np.array(dataset)
 
     sequence_length = seq_len + 1
     result = []
-    for index in range(len(data) - sequence_length):
-        result.append(data[index: index + sequence_length])
+    for index in range(len(dataset) - sequence_length):
+        result.append(dataset[index: index + sequence_length])
     
     if normalise_window:
         result = normalise_windows(result)
@@ -40,8 +46,9 @@ def load_data(filename, seq_len, normalise_window):
 def normalise_windows(window_data):
     normalised_data = []
     for window in window_data:
-        normalised_window = [((float(p) / float(window[0])) - 1) for p in window]
-        normalised_data.append(normalised_window)
+        if float(window[0])!=0:
+            normalised_window = [((float(p) / float(window[0])) - 1) for p in window]
+            normalised_data.append(normalised_window)
     return normalised_data
 
 def build_model(layers):

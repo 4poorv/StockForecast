@@ -12,10 +12,10 @@ def stock_prediction(file_path,epoch_size):
     with open(file_path) as f:
         for n, line in enumerate(f):
             if n != 0:
-                dataset.append(float(line.split(',')[1]))
+                dataset.append(float(line.split(',')[4]))
 
     dataset = np.array(dataset)
-    print(dataset)
+    #print(dataset)
     # Create dataset matrix (X=t and Y=t+1)
     def create_dataset(dataset):
         dataX = [dataset[n + 1] for n in range(len(dataset) - 2)]
